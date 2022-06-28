@@ -2,17 +2,17 @@
 
 void nextCode(int currentPoint, int length, int maxNumber, int *array)
 {
-    if (length > 0)
+    if (currentPoint > 0)
     {
         for (int i = 0; i < maxNumber; i++)
         {
-            array[currentPoint] = i;
+            array[currentPoint-1] = i;
             if (currentPoint > 0)
             {
                 nextCode(currentPoint - 1, length, maxNumber, array);
             }
             
-            if (currentPoint == 0)
+            if ((currentPoint-1) == 0)
             {
                 for (int j = 0; j < length; j++)
                 {
