@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <string.h>
+
+char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void nextCode(int currentPoint, int length, int maxNumber, int *array)
 {
@@ -14,10 +17,14 @@ void nextCode(int currentPoint, int length, int maxNumber, int *array)
             
             if ((currentPoint-1) == 0)
             {
+                char generatedPassword[length];
+
                 for (int j = 0; j < length; j++)
                 {
-                    printf("%d ", array[j]);
+                    //printf("%d ", array[j]);
+                    generatedPassword[j] = alphabets[array[j]];
                 }
+                printf("\n%.*s", length, generatedPassword );
                 printf("\n");
             }
         }
@@ -27,9 +34,9 @@ void nextCode(int currentPoint, int length, int maxNumber, int *array)
 
 int main()
 {
-    int length = 3;
+    int length = 50;
 
-    int maxNumber = 5;
+    int maxNumber = 26;
 
     int arrayOfNumbers[length];
 
@@ -54,7 +61,7 @@ int main()
         nextCode(i, i, maxNumber, arrayOfNumbers);
     }
     */
-    nextCode(2, 2, maxNumber, arrayOfNumbers);
+    nextCode(4, 4, sizeof(alphabets), arrayOfNumbers);
 
     return 0;
 }
