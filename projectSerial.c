@@ -104,9 +104,9 @@ int main(int argc, char *argv[])
         generatePassword[i] = -1;
     }
 
-    letters = 1;
+    letters = strlen((char *)userEntry);
 
-    for (letters = 1; letters <= 50; letters++)
+    for (; letters <= (strlen((char *)userEntry) + 1); letters++)
     {
         nextCode(letters, letters, lenAlphabets, generatePassword, userEntry);
         printf("\n");
