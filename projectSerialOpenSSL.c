@@ -64,7 +64,7 @@ bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned 
                 for (j = 0; j < length; j++)
                 {
                     // Debug Code
-                    //printf("%d ", array[j]);
+                    // printf("%d ", array[j]);
                     generatedPassword[j] = alphabets[array[j]];
                 }
                 generatedPassword[length] = '\0';
@@ -89,10 +89,10 @@ bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned 
                 }
                 if (same)
                 {
-                    
+
                     // Found it!
                     printf("\n%.*s is the one! hashes are:\n", length, generatedPasswordCopy);
-                    
+
                     printf("\nSource: ");
                     for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
                     {
@@ -106,7 +106,7 @@ bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned 
                         printf("%02x", hashFromGenerated[j]);
                     }
                     printf("\n");
-                    
+
                     found = same;
                 }
                 // printf("\n");
@@ -177,6 +177,29 @@ int main(int argc, char *argv[])
         } while(!same);
         */
         // printf("\nDEC: %s\n", (char *)test); // don't use this string as an input
+
+        if (found)
+        {
+            int length = 0;
+            bool moreLetters = true;
+            while (moreLetters){
+                if (generatePassword[length] == -1) {
+                    moreLetters = false;
+                }
+                length++;
+            }
+            uint8_t generatedDisplayPassword[length + 1];
+            int j = 0;
+            for (j = 0; j < length; j++)
+            {
+                // Debug Code
+                // printf("%d ", array[j]);
+                generatedDisplayPassword[j] = alphabets[generatePassword[j]];
+            }
+            generatedDisplayPassword[length] = '\0';
+
+            printf("Password is: %s\n", generatedDisplayPassword);
+        }
     }
     return 0;
 }
