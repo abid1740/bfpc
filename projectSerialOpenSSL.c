@@ -31,8 +31,9 @@ char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 // uint8_t iv[16] = {0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
 // char key[] = "secret key 123";
 
-void nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
+bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
 {
+    bool found = false;
     if (currentPoint > 0)
     {
         int i = 0;
@@ -46,12 +47,12 @@ void nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned 
         printf("\n");
         */
 
-        for (int i = 0; i < maxNumber; i++)
+        for (int i = 0; i < maxNumber && !found; i++)
         {
             array[currentPoint - 1] = i;
             if (currentPoint > 0)
             {
-                nextCode(currentPoint - 1, length, maxNumber, array, encodedEntry);
+                found = nextCode(currentPoint - 1, length, maxNumber, array, encodedEntry);
             }
 
             if ((currentPoint - 1) == 0)
@@ -106,13 +107,14 @@ void nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned 
                     }
                     printf("\n");
                     
-                    exit(0);
+                    found = same;
                 }
                 // printf("\n");
             }
         }
         // printf("\n");
     }
+    return found;
 }
 int main(int argc, char *argv[])
 {
@@ -129,7 +131,7 @@ int main(int argc, char *argv[])
 
     int lenAlphabets = strlen(alphabets);
 
-    bool same = false;
+    bool found = false;
 
     printf("Please enter a password (max size is %d): ", LENGTH);
     scanf("%m[^\n]%*c", &userEntry);
@@ -157,9 +159,9 @@ int main(int argc, char *argv[])
             generatePassword[i] = -1;
         }
 
-        for (letters = 1; letters <= LENGTH; letters++)
+        for (letters = 1; letters <= LENGTH && !found; letters++)
         {
-            nextCode(letters, letters, lenAlphabets, generatePassword, hashFromUser);
+            found = nextCode(letters, letters, lenAlphabets, generatePassword, hashFromUser);
             printf("\n");
         }
         /*
