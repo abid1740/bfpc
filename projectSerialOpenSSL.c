@@ -17,105 +17,12 @@
  *
  **********************************************************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <openssl/bio.h>
-#include <openssl/sha.h>
 
-char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
-// char alphabets[] = "ABCD";
-// uint8_t iv[16] = {0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff};
-// char key[] = "secret key 123";
 
-bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
-{
-    bool found = false;
-    if (currentPoint > 0)
-    {
-        int i = 0;
+#include "project.h"
 
-        /* Debug Code
-        printf("\n");
-        for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
-        {
-            printf("%02x", encodedEntry[i]);
-        }
-        printf("\n");
-        */
+extern char alphabets[];
 
-        for (int i = 0; i < maxNumber && !found; i++)
-        {
-            array[currentPoint - 1] = i;
-            if (currentPoint > 0)
-            {
-                found = nextCode(currentPoint - 1, length, maxNumber, array, encodedEntry);
-            }
-
-            if ((currentPoint - 1) == 0)
-            {
-                uint8_t generatedPassword[length + 1];
-                uint8_t generatedPasswordCopy[length + 1];
-
-                int j = 0;
-                for (j = 0; j < length; j++)
-                {
-                    // Debug Code
-                    // printf("%d ", array[j]);
-                    generatedPassword[j] = alphabets[array[j]];
-                }
-                generatedPassword[length] = '\0';
-
-                printf("Testing: %s\n", generatedPassword);
-                strcpy(generatedPasswordCopy, generatedPassword);
-
-                unsigned char hashFromGenerated[SHA256_DIGEST_LENGTH];
-
-                SHA256_CTX context;
-                SHA256_Init(&context);
-                SHA256_Update(&context, (unsigned char *)generatedPassword, length);
-                SHA256_Final(hashFromGenerated, &context);
-
-                bool same = true;
-                for (j = 0; j < SHA256_DIGEST_LENGTH && same; j++)
-                {
-                    if (encodedEntry[j] != hashFromGenerated[j])
-                    {
-                        same = false;
-                    }
-                }
-                if (same)
-                {
-
-                    // Found it!
-                    printf("\n%.*s is the one! hashes are:\n", length, generatedPasswordCopy);
-
-                    printf("\nSource: ");
-                    for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
-                    {
-                        printf("%02x", encodedEntry[j]);
-                    }
-                    printf("\n");
-
-                    printf("\nGenerated: ");
-                    for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
-                    {
-                        printf("%02x", hashFromGenerated[j]);
-                    }
-                    printf("\n");
-
-                    found = same;
-                }
-                // printf("\n");
-            }
-        }
-        // printf("\n");
-    }
-    return found;
-}
 int main(int argc, char *argv[])
 {
     int const LENGTH = 100;
@@ -161,9 +68,12 @@ int main(int argc, char *argv[])
 
         for (letters = 1; letters <= LENGTH && !found; letters++)
         {
+            printf(".");
+            fflush(stdout);
             found = nextCode(letters, letters, lenAlphabets, generatePassword, hashFromUser);
-            printf("\n");
+            
         }
+        printf("\n");
         /*
         do
         {

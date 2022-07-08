@@ -1,67 +1,91 @@
-#include <stdio.h>
-#include <string.h>
 
-char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+#include "project.h"
 
-void nextCode(int currentPoint, int length, int maxNumber, int *array)
+char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
+
+bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
 {
+    bool found = false;
+    
     if (currentPoint > 0)
     {
-        for (int i = 0; i < maxNumber; i++)
-        {
-            array[currentPoint-1] = i;
-            if (currentPoint > 0)
-            {
-                nextCode(currentPoint - 1, length, maxNumber, array);
-            }
-            
-            if ((currentPoint-1) == 0)
-            {
-                char generatedPassword[length];
+        int i = 0;
 
-                for (int j = 0; j < length; j++)
-                {
-                    //printf("%d ", array[j]);
-                    generatedPassword[j] = alphabets[array[j]];
-                }
-                printf("\n%.*s", length, generatedPassword );
-                printf("\n");
-            }
+        /* Debug Code
+        printf("\n");
+        for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
+        {
+            printf("%02x", encodedEntry[i]);
         }
         printf("\n");
-    }
-}
+        */
 
-int main()
-{
-    int length = 50;
+        for (int i = 0; i < maxNumber && !found; i++)
+        {
+            array[currentPoint - 1] = i;
+            if (currentPoint > 0)
+            {
+                found = nextCode(currentPoint - 1, length, maxNumber, array, encodedEntry);
+            }
 
-    int maxNumber = 26;
+            if ((currentPoint - 1) == 0)
+            {
+                uint8_t generatedPassword[length + 1];
+                uint8_t generatedPasswordCopy[length + 1];
 
-    int arrayOfNumbers[length];
+                int j = 0;
+                for (j = 0; j < length; j++)
+                {
+                    // Debug Code
+                    // printf("%d ", array[j]);
+                    generatedPassword[j] = alphabets[array[j]];
+                }
+                generatedPassword[length] = '\0';
 
-    int i = 0;
+                //printf("Testing: %s\n", generatedPassword);
+                strcpy(generatedPasswordCopy, generatedPassword);
 
-    /*
-    for (i = 0; i < maxNumber; i++){
-        arrayOfNumbers[i] = i;
-        for (int j = 0; j < maxNumber; j++){
-            arrayOfNumbers[j] = j;
-            for (int k = 0; k < maxNumber; k++) {
-                arrayOfNumbers[k] = k;
+                unsigned char hashFromGenerated[SHA256_DIGEST_LENGTH];
 
-                printf("%d %d %d\n", arrayOfNumbers[i], arrayOfNumbers[j], arrayOfNumbers[k]);
+                SHA256_CTX context;
+                SHA256_Init(&context);
+                SHA256_Update(&context, (unsigned char *)generatedPassword, length);
+                SHA256_Final(hashFromGenerated, &context);
+
+                bool same = true;
+                for (j = 0; j < SHA256_DIGEST_LENGTH && same; j++)
+                {
+                    if (encodedEntry[j] != hashFromGenerated[j])
+                    {
+                        same = false;
+                    }
+                }
+                if (same)
+                {
+
+                    // Found it!
+                    printf("\n%.*s is the one! hashes are:\n", length, generatedPasswordCopy);
+
+                    printf("\nSource: ");
+                    for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
+                    {
+                        printf("%02x", encodedEntry[j]);
+                    }
+                    printf("\n");
+
+                    printf("\nGenerated: ");
+                    for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
+                    {
+                        printf("%02x", hashFromGenerated[j]);
+                    }
+                    printf("\n");
+
+                    found = same;
+                }
+                // printf("\n");
             }
         }
+        // printf("\n");
     }
-    */
-    /*
-    for (i = 0; i <= length; i++)
-    {
-        nextCode(i, i, maxNumber, arrayOfNumbers);
-    }
-    */
-    nextCode(4, 4, sizeof(alphabets), arrayOfNumbers);
-
-    return 0;
+    return found;
 }
