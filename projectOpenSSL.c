@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
     // now that we have the password Hashed, let's send that to the other threads.
     MPI_Bcast(&(hashFromUser[0]), SHA256_DIGEST_LENGTH, MPI_UNSIGNED_CHAR, root, comm);
 
+    /* Debug Code
     if (myRank == 2)
     {
         printf("P%d:\n", myRank);
@@ -111,6 +112,7 @@ int main(int argc, char *argv[])
         }
         printf("\n");
     }
+    */
 
     // Now that all processes have the Hash, time to tell them their initial length assignment
     if (myRank == root)
@@ -141,7 +143,7 @@ int main(int argc, char *argv[])
 
     if (found)
     {
-        printf("P%d Found passowrd\n", myRank);
+        printf("P%d Found password\n", myRank);
         int length = 0;
         bool moreLetters = true;
         while (moreLetters)
@@ -163,6 +165,8 @@ int main(int argc, char *argv[])
         generatedDisplayPassword[length] = '\0';
 
         printf("Password is: %s\n", generatedDisplayPassword);
+    } else {
+        printf("P%d found nothing, exiting...\n", myRank);
     }
 
     MPI_Finalize();
