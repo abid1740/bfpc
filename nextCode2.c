@@ -98,23 +98,41 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
 
 bool addOne(int currentPoint, int length, int maxNumber, int *array)
 {
-
-    array[currentPoint - 1]++;
-
-    if (array[currentPoint - 1] > maxNumber)
+    bool maxReached = false;
+    if (currentPoint > 0)
     {
-        array[currentPoint - 1 ] = 0;
-        addOne((currentPoint - 1), length, maxNumber, array);
+        if (array[currentPoint - 1] <= maxNumber)
+        {
+
+            array[currentPoint - 1]++;
+
+            if (array[currentPoint - 1] > maxNumber)
+            {
+                if ((currentPoint - 1) > 0)
+                {
+                    array[currentPoint - 1] = 0;
+                    maxReached = addOne((currentPoint - 1), length, maxNumber, array);
+                }
+                else
+                {
+                    maxReached = true;
+                }
+            }
+        } else {
+            maxReached = true;
+        }
     }
+
+    return maxReached;
 }
 
 int main()
 {
-    int startingPoint = 4;
-    int endingPoint = 6;
+    int startingPoint = 0;
+    int endingPoint = 2;
     int length = 6;
 
-    int alphaCount = 26;
+    int alphaCount = 5;
 
     int passwordMap[length];
 
@@ -139,10 +157,10 @@ int main()
 
         if (!found)
         {
-            bool added = false;
-            for (j = 0; j < 3000; j++)
+            bool cycleDone = false;
+            for (j = 0; j < 3000 && !cycleDone; j++)
             {
-                addOne(endingPoint, length, alphaCount, passwordMap);
+                cycleDone = addOne(endingPoint, length, alphaCount, passwordMap);
                 for (int i = 0; i < length; i++)
                 {
                     printf("%d ", passwordMap[i]);
