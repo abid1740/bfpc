@@ -9,6 +9,6 @@
 #include <stdbool.h>
 #include <openssl/sha.h>
 
-bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry);
+bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry);
 
 #endif

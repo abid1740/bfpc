@@ -1,12 +1,13 @@
+
 #include "project.h"
 
 char alphabets[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 
-bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
+bool nextCode(int currentPoint, int length, int maxNumber, int *array, unsigned char *encodedEntry)
 {
     bool found = false;
-
-    if (currentPoint > startingPoint)
+    
+    if (currentPoint > 0)
     {
         int i = 0;
 
@@ -22,12 +23,12 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
         for (int i = 0; i < maxNumber && !found; i++)
         {
             array[currentPoint - 1] = i;
-            if (currentPoint > startingPoint)
+            if (currentPoint > 0)
             {
-                found = nextCode(startingPoint, currentPoint - 1, length, maxNumber, array, encodedEntry);
+                found = nextCode(currentPoint - 1, length, maxNumber, array, encodedEntry);
             }
 
-            if ((currentPoint - 1) == startingPoint)
+            if ((currentPoint - 1) == 0)
             {
                 uint8_t generatedPassword[length + 1];
                 uint8_t generatedPasswordCopy[length + 1];
@@ -36,13 +37,12 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
                 for (j = 0; j < length; j++)
                 {
                     // Debug Code
-                    printf("%d ", array[j]);
+                    // printf("%d ", array[j]);
                     generatedPassword[j] = alphabets[array[j]];
                 }
                 generatedPassword[length] = '\0';
 
-                printf("Testing: %s\n", generatedPassword);
-                
+                //printf("Testing: %s\n", generatedPassword);
                 strcpy(generatedPasswordCopy, generatedPassword);
 
                 unsigned char hashFromGenerated[SHA256_DIGEST_LENGTH];
@@ -82,10 +82,10 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
 
                     found = same;
                 }
-                printf("\n");
+                // printf("\n");
             }
         }
-        printf("\n");
+        // printf("\n");
     }
     return found;
 }

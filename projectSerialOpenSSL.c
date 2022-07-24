@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         {
             printf(".");
             fflush(stdout);
-            found = nextCode(letters, letters, lenAlphabets, generatePassword, hashFromUser);
+            found = nextCode(0, letters, letters, lenAlphabets, generatePassword, hashFromUser);
             
         }
         printf("\n");
