@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
         generatePassword[i] = -1;
     }
 
-    found = nextCode(assignmentLength, assignmentLength, lenAlphabets, generatePassword, hashFromUser);
+    found = nextCode(0, assignmentLength, assignmentLength, lenAlphabets, generatePassword, hashFromUser);
 
     printf("\n");
 

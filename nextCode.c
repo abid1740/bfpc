@@ -36,12 +36,12 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
                 for (j = 0; j < length; j++)
                 {
                     // Debug Code
-                    printf("%d ", array[j]);
+                    //printf("%d ", array[j]);
                     generatedPassword[j] = alphabets[array[j]];
                 }
                 generatedPassword[length] = '\0';
 
-                printf("Testing: %s\n", generatedPassword);
+                //printf("Testing: %s\n", generatedPassword);
                 
                 strcpy(generatedPasswordCopy, generatedPassword);
 
@@ -82,10 +82,10 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
 
                     found = same;
                 }
-                printf("\n");
+                //printf("\n");
             }
         }
-        printf("\n");
+        //printf("\n");
     }
     return found;
 }
