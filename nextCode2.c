@@ -126,9 +126,14 @@ bool addOne(int currentPoint, int length, int maxNumber, int *array)
 
 int main()
 {
-    int startingPoint = 0;
-    int endingPoint = 1;
-    int length = 6;
+    int startingPoint = 0;    
+    int length = 1;
+    int endingPoint = length;
+    
+    if (length > 3){
+        endingPoint = length - 3;
+    }    
+    //int endingPoint = 1;
 
     int alphaCount = 5;
 
@@ -151,7 +156,7 @@ int main()
         // passwordMap[0] = i;
         // passwordMap[1] = j;
 
-        // found = nextCode(startingPoint, endingPoint, length, alphaCount, passwordMap, hashFromUser);
+        //found = nextCode(startingPoint, endingPoint, length, alphaCount, passwordMap, hashFromUser);
 
         if (!found)
         {
@@ -162,7 +167,12 @@ int main()
             }
             printf("\n");
 
-            for (j = 0; j < 3000 && !cycleDone; j++)
+            if (length <= 3) {
+                found = nextCode(startingPoint, endingPoint, length, alphaCount, passwordMap, hashFromUser);
+            } else {
+                found = nextCode(endingPoint, length, length, alphaCount, passwordMap, hashFromUser);
+            }
+            while(!cycleDone)
             {
                 cycleDone = addOne(endingPoint, length, alphaCount, passwordMap);
                 for (int i = 0; i < length; i++)
@@ -170,6 +180,7 @@ int main()
                     printf("%d ", passwordMap[i]);
                 }
                 printf("\n");
+                found = nextCode(endingPoint, length, length, alphaCount, passwordMap, hashFromUser);
             }
 
             found = true;
