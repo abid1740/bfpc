@@ -54,7 +54,9 @@ int main(int argc, char *argv[])
     int generatePassword[LENGTH];
 
     int lenAlphabets = strlen(alphabets);
-    //lenAlphabets = 5;
+    //lenAlphabets = 5; //Used for shorten Testing
+    //lenAlphabets = 26;
+    //printf("alpha: %d\n", lenAlphabets);
 
     bool found = false;
 
@@ -65,7 +67,9 @@ int main(int argc, char *argv[])
 
     int currentLength = 1;
 
-    
+    // time Measurements
+    double startTime = 0.0;
+    double endTime = 0.0;
 
     // Use to store the tasks being assigned to each process at the root
     int assignmentTasks[processCount][LENGTH];
@@ -103,6 +107,7 @@ int main(int argc, char *argv[])
             }
         } while (!passwordHashed);
 
+        
         /* we don't need this?
         // now let's start the track keeping of lenght for each process
         for (lengthControllerIndex = 0; lengthControllerIndex < processCount; lengthControllerIndex++)
@@ -113,6 +118,7 @@ int main(int argc, char *argv[])
     }
     // now that we have the password Hashed, let's send that to the other threads.
     MPI_Bcast(&(hashFromUser[0]), SHA256_DIGEST_LENGTH, MPI_UNSIGNED_CHAR, root, comm);
+    startTime = MPI_Wtime();
 
     /* Debug Code
     if (myRank == 2)
@@ -165,6 +171,7 @@ int main(int argc, char *argv[])
 
                 if (cycleDone){
                     currentLength++;
+                    printf("**************************************** + 1 currentLenght: %d\n", currentLength);
                 }
             }
 
@@ -186,12 +193,14 @@ int main(int argc, char *argv[])
             MPI_Recv(&generatePassword, 100, MPI_INT, root, 0, comm, &status);
         }
 
+        /* //Debug code
         printf("P%d, Assignment Length: %d\n", myRank, assignmentLength);
 
         for (i = 0; i < assignmentLength; i++){
             printf("%d ", generatePassword[i]);
         }
         printf("\n");   
+        */
 
         int assignmentStart = assignmentLength - 3;
         int assignmentEnd = assignmentLength;
@@ -231,6 +240,7 @@ int main(int argc, char *argv[])
 
                     if (cycleDone){
                         currentLength++;
+                        printf("**************************************** + 1 currentLenght: %d\n", currentLength);
 
                         endingPoint = currentLength;                
                         if (currentLength > 3){
@@ -260,16 +270,20 @@ int main(int argc, char *argv[])
                 currentLength++;
             }
             */
+            
 
             
         }
         MPI_Bcast(&(found), 1, MPI_C_BOOL, root, comm);
     }
+    endTime = MPI_Wtime();
 
     MPI_Barrier(comm);
 
     // Transfer threadID that found the password
     MPI_Bcast(&(threadIDFoundPassword), 1, MPI_INT, root, comm);
+
+    
     // transfer root to the new threadID
     root = threadIDFoundPassword;
     
@@ -301,7 +315,8 @@ int main(int argc, char *argv[])
             }
             generatedDisplayPassword[assignmentLength] = '\0';
             
-            printf("Password is: %s\n", generatedDisplayPassword);
+            printf("Password is: \"%s\"\n", generatedDisplayPassword);
+            printf("Total time used: %lfs\n", endTime-startTime);
             
         } 
     }
