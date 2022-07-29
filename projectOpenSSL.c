@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
     //printf("New Root for T%d is now T%d\n", myRank, root);
 
     if (myRank == root){
-        printf("P%d: is now the new Root!", root);
+        printf("P%d: is now the new Root!\n", root);
         if (found)
         {
             printf("P%d Found password\n", myRank);
