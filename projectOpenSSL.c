@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         bool passwordHashed = false;
         do
         {
-            printf("Please enter a password (max size is %d): ", LENGTH);
+            printf("P%d: Please enter a password (max size is %d): ", root, LENGTH);
             fflush(stdout);
             scanf("%m[^\n]%*c", &userEntry);
 
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
                 SHA256_Update(&context, (unsigned char *)userEntry, length);
                 SHA256_Final(hashFromUser, &context);
 
-                printf("Your Hash is\n");
+                printf("P%d: Your Hash is\n", root);
                 for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
                 {
                     printf("%02x", hashFromUser[i]);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("Password can only be less than 100 characters long. \n");
+                printf("P%d: Password can only be less than 100 characters long. \n", root);
             }
         } while (!passwordHashed);
 
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
                 if (cycleDone){
                     currentLength++;
-                    printf("**************************************** + 1 currentLenght: %d\n", currentLength);
+                    printf("P%d: **************************************** + 1 currentLenght: %d\n", root, currentLength);
                 }
             }
 
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
 
                     if (cycleDone){
                         currentLength++;
-                        printf("**************************************** + 1 currentLenght: %d\n", currentLength);
+                        printf("P%d: **************************************** + 1 currentLenght: %d\n", root, currentLength);
 
                         endingPoint = currentLength;                
                         if (currentLength > 3){
@@ -287,9 +287,10 @@ int main(int argc, char *argv[])
     // transfer root to the new threadID
     root = threadIDFoundPassword;
     
-    printf("New Root for T%d is now T%d\n", myRank, root);
+    //printf("New Root for T%d is now T%d\n", myRank, root);
 
     if (myRank == root){
+        printf("P%d: is now the new Root!", root);
         if (found)
         {
             printf("P%d Found password\n", myRank);
@@ -315,8 +316,8 @@ int main(int argc, char *argv[])
             }
             generatedDisplayPassword[assignmentLength] = '\0';
             
-            printf("Password is: \"%s\"\n", generatedDisplayPassword);
-            printf("Total time used: %lfs\n", endTime-startTime);
+            printf("P%d: Password is: \"%s\"\n", root, generatedDisplayPassword);
+            printf("P%d: Total time used: %lfs\n", root, endTime-startTime);
             
         } 
     }

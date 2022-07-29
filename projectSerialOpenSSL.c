@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
 
     bool found = false;
 
+    struct timeval stopTime, startTime;
+
     printf("Please enter a password (max size is %d): ", LENGTH);
     scanf("%m[^\n]%*c", &userEntry);
 
@@ -66,6 +68,7 @@ int main(int argc, char *argv[])
             generatePassword[i] = -1;
         }
 
+        gettimeofday(&startTime, NULL);
         for (letters = 1; letters <= LENGTH && !found; letters++)
         {
             printf(".");
@@ -73,6 +76,8 @@ int main(int argc, char *argv[])
             found = nextCode(0, letters, letters, lenAlphabets, generatePassword, hashFromUser);
             
         }
+        gettimeofday(&stopTime, NULL);
+
         printf("\n");
         /*
         do
@@ -109,6 +114,7 @@ int main(int argc, char *argv[])
             generatedDisplayPassword[length] = '\0';
 
             printf("Password is: %s\n", generatedDisplayPassword);
+            printf("Total Runtime: %lus\n", (stopTime.tv_sec - startTime.tv_sec) );
         }
     }
     return 0;
