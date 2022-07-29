@@ -19,7 +19,7 @@ bool nextCode(int startingPoint, int currentPoint, int length, int maxNumber, in
         printf("\n");
         */
 
-        for (int i = 0; i < maxNumber && !found; i++)
+        for (i = 0; i < maxNumber && !found; i++)
         {
             array[currentPoint - 1] = i;
             if (currentPoint > startingPoint)
